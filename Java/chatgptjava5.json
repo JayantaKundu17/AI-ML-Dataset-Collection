@@ -1,0 +1,71 @@
+{
+"code_id": "PY3_007_GPT",
+"bug_id": "PY3_007_GPT_B01",
+"language": "Python 3",
+"metadata": {
+"task_category": "Bit Manipulation - Greedy",
+"created_date_timestamp": 1763285621
+},
+"original_docstring": "Maximum Score",
+"original_code": null,
+"source_name": "geeksforgeeks - [https://www.geeksforgeeks.org/problems/maximum-score--173045/1](https://www.geeksforgeeks.org/problems/maximum-score--173045/1)",
+"function_signature": "def maxScore(self, n, k, x, arr)",
+"llm_name": "ChatGPT",
+"prompt_text": "Write a Python solution for the GeeksforGeeks problem Maximum Score.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "class Solution:\n    def maxScore(self, n, k, x, arr):\n        med_sums = []\n\n        for length in range(1, n + 1):\n            total = 0\n            for i in range(n - length + 1):\n                sub = arr[i:i+length]\n                sub.sort()\n                median = sub[length // 2]\n                total += median\n            med_sums.append(total)\n\n        result = 0\n\n        for bit in range(31, -1, -1):\n            count = 0\n            for val in med_sums:\n                if (val & (result | (1 << bit))) == (result | (1 << bit)):\n                    count += 1\n            if count >= k:\n                result |= (1 << bit)\n\n        return x | result",
+"oracle_context": {
+"apis": [],
+"classes": ["Solution"],
+"vars": ["med_sums", "result"]
+},
+"test_cases": [
+{
+"id": "PY3_007_GPT_T01",
+"input": "n = 3, arr = [4, 3, 6], k = 2, x = 7",
+"expected": "7"
+},
+{
+"id": "PY3_007_GPT_T02",
+"input": "n = 3, arr = [1, 1, 2], k = 1, x = 13",
+"expected": "15"
+}
+],
+"expected_output": "7, 15",
+"actual_output": "Wrong Answer",
+"bug_analysis": {
+"bug_symptom": "WRONG_ANSWER",
+"bug_type": "Logic error",
+"bug_subtype": "Invalid greedy AND construction",
+"bug_description": "The approach assumes bits can be greedily constructed independently, but fails to ensure that exactly k elements share all selected bits simultaneously.",
+"root_cause": "Incorrect assumption of bit independence in AND maximization across subset selection.",
+"severity": "High",
+"bug_location": "Bitwise greedy loop constructing result"
+},
+"test_failures": [
+{
+"test_id": "PY3_007_GPT_T01",
+"failure_type": "Wrong Answer",
+"details": "Returns 15 instead of 7"
+}
+],
+"improvement_strategy": {
+"improved_prompt": "Use combinational selection or DP to ensure exactly k values maximize AND before OR with x.",
+"improvements_made": "Replace greedy bit construction with subset-based validation."
+},
+"regeneration_results": {
+"regenerated_code": null,
+"validation_results": {
+"passed": 0,
+"failed": 1121,
+"pass_rate": 0.0
+}
+},
+"metrics": {
+"original_pass_rate": 0.0,
+"improved_pass_rate": 0.0,
+"percent_improvement": 0.0
+}
+}

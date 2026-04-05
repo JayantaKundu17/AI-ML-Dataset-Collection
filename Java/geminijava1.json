@@ -1,0 +1,65 @@
+{
+"code_id": "JAVA21_001_GEM",
+"bug_id": "JAVA21_001_GEM_B01",
+"language": "Java 21",
+"metadata": {
+"task_category": "Tree Traversal Verification",
+"created_date_timestamp": 1763213127
+},
+"original_docstring": "Check Tree Traversal",
+"original_code": null,
+"source_name": "geeksforgeeks - https://www.geeksforgeeks.org/problems/check-tree-traversal--141628/1",
+"function_signature": "static boolean checktree(int preorder[], int inorder[], int postorder[], int N)",
+"llm_name": "Gemini",
+"prompt_text": "Write a Java solution for the GeeksforGeeks problem 'Check Tree Traversal'. Given preorder, inorder and postorder traversals of a binary tree of size N, determine whether they correspond to the same tree.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "import java.util.*;\n\nclass Solution {\n    static int preIndex = 0;\n    static int postIndex = 0;\n\n    static boolean checktree(int preorder[], int inorder[], int postorder[], int N) {\n        Map<Integer,Integer> inMap = new HashMap<>();\n        for(int i = 0; i < N; i++) inMap.put(inorder[i], i);\n\n        preIndex = 0;\n        postIndex = 0;\n\n        return verify(preorder, postorder, inMap, 0, N - 1);\n    }\n\n    static boolean verify(int[] pre, int[] post, Map<Integer,Integer> inMap, int inStart, int inEnd) {\n        if(inStart > inEnd) return true;\n\n        int rootVal = pre[preIndex++];\n\n        if(!inMap.containsKey(rootVal)) return false;\n        int inIndex = inMap.get(rootVal);\n\n        if(inIndex < inStart || inIndex > inEnd) return false;\n\n        if(!verify(pre, post, inMap, inStart, inIndex - 1)) return false;\n        if(!verify(pre, post, inMap, inIndex + 1, inEnd)) return false;\n\n        if(rootVal != post[postIndex++]) return false;\n\n        return true;\n    }\n}",
+"oracle_context": {
+"apis": ["HashMap"],
+"classes": ["Solution"],
+"vars": ["preIndex", "postIndex", "inMap"]
+},
+"test_cases": [
+{
+"id": "JAVA21_001_GEM_T01",
+"input": "N = 5, preorder = [1,2,4,5,3], inorder = [4,2,5,1,3], postorder = [4,5,2,3,1]",
+"expected": "Yes"
+},
+{
+"id": "JAVA21_001_GEM_T02",
+"input": "N = 5, preorder = [1,5,4,2,3], inorder = [4,2,5,1,3], postorder = [4,1,2,3,5]",
+"expected": "No"
+}
+],
+"expected_output": "Yes, No",
+"actual_output": "All test cases passed successfully (1272/1272)",
+"bug_analysis": {
+"bug_symptom": "NO_BUG",
+"bug_type": null,
+"bug_subtype": null,
+"bug_description": "The generated solution correctly verifies whether the given preorder, inorder, and postorder traversals correspond to the same binary tree.",
+"root_cause": null,
+"severity": null,
+"bug_location": null
+},
+"test_failures": [],
+"improvement_strategy": {
+"improved_prompt": null,
+"improvements_made": null
+},
+"regeneration_results": {
+"regenerated_code": null,
+"validation_results": {
+"passed": 1272,
+"failed": 0,
+"pass_rate": 1.0
+}
+},
+"metrics": {
+"original_pass_rate": 1.0,
+"improved_pass_rate": 0.0,
+"percent_improvement": 0.0
+}
+}

@@ -1,0 +1,65 @@
+{
+"code_id": "JAVA21_001_DPSK",
+"bug_id": "JAVA21_001_DPSK_B01",
+"language": "Java 21",
+"metadata": {
+"task_category": "Tree Traversal Verification",
+"created_date_timestamp": 1763215208
+},
+"original_docstring": "Check Tree Traversal",
+"original_code": null,
+"source_name": "geeksforgeeks - https://www.geeksforgeeks.org/problems/check-tree-traversal--141628/1",
+"function_signature": "static boolean checktree(int preorder[], int inorder[], int postorder[], int N)",
+"llm_name": "DeepSeek",
+"prompt_text": "Write a Java solution for the GeeksforGeeks problem 'Check Tree Traversal'. Given preorder, inorder and postorder traversals of a binary tree of size N, determine whether they correspond to the same tree.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "class Solution {\n\n    static boolean checktree(int preorder[], int inorder[], int postorder[], int N) {\n        return check(preorder, inorder, postorder, 0, N-1, 0, N-1, 0, N-1);\n    }\n\n    static boolean check(int pre[], int in[], int post[],\n                         int preStart, int preEnd,\n                         int inStart, int inEnd,\n                         int postStart, int postEnd) {\n\n        if (preStart > preEnd && inStart > inEnd && postStart > postEnd)\n            return true;\n\n        if ((preEnd - preStart) != (inEnd - inStart) ||\n            (preEnd - preStart) != (postEnd - postStart))\n            return false;\n\n        int root = pre[preStart];\n\n        if (root != post[postEnd])\n            return false;\n\n        int index = -1;\n        for (int i = inStart; i <= inEnd; i++) {\n            if (in[i] == root) {\n                index = i;\n                break;\n            }\n        }\n\n        if (index == -1)\n            return false;\n\n        int leftSize = index - inStart;\n\n        boolean left = check(pre, in, post,\n                             preStart + 1, preStart + leftSize,\n                             inStart, index - 1,\n                             postStart, postStart + leftSize - 1);\n\n        boolean right = check(pre, in, post,\n                              preStart + leftSize + 1, preEnd,\n                              index + 1, inEnd,\n                              postStart + leftSize, postEnd - 1);\n\n        return left && right;\n    }\n}",
+"oracle_context": {
+"apis": [],
+"classes": ["Solution"],
+"vars": []
+},
+"test_cases": [
+{
+"id": "JAVA21_001_DPSK_T01",
+"input": "N = 5, preorder = [1,2,4,5,3], inorder = [4,2,5,1,3], postorder = [4,5,2,3,1]",
+"expected": "Yes"
+},
+{
+"id": "JAVA21_001_DPSK_T02",
+"input": "N = 5, preorder = [1,5,4,2,3], inorder = [4,2,5,1,3], postorder = [4,1,2,3,5]",
+"expected": "No"
+}
+],
+"expected_output": "Yes, No",
+"actual_output": "All test cases passed successfully (1272/1272)",
+"bug_analysis": {
+"bug_symptom": "NO_BUG",
+"bug_type": null,
+"bug_subtype": null,
+"bug_description": "The solution correctly verifies whether the given preorder, inorder and postorder traversals belong to the same binary tree.",
+"root_cause": null,
+"severity": null,
+"bug_location": null
+},
+"test_failures": [],
+"improvement_strategy": {
+"improved_prompt": null,
+"improvements_made": null
+},
+"regeneration_results": {
+"regenerated_code": null,
+"validation_results": {
+"passed": 1272,
+"failed": 0,
+"pass_rate": 1.0
+}
+},
+"metrics": {
+"original_pass_rate": 1.0,
+"improved_pass_rate": 0.0,
+"percent_improvement": 0.0
+}
+}
