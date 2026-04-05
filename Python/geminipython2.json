@@ -1,0 +1,65 @@
+{
+"code_id": "PY3_002_GEM",
+"bug_id": "PY3_002_GEM_B01",
+"language": "Python 3",
+"metadata": {
+"task_category": "Card Flip Arrangement",
+"created_date_timestamp": 1763217314
+},
+"original_docstring": "Card Flip",
+"original_code": null,
+"source_name": "geeksforgeeks - https://www.geeksforgeeks.org/problems/card-flip--150358/1",
+"function_signature": "def minOperations(self, front: List[int], back: List[int]) -> int",
+"llm_name": "Gemini",
+"prompt_text": "Write a Python solution for the GeeksforGeeks problem 'Card Flip'. Determine the minimum number of operations required to arrange cards so that the visible numbers are in non-decreasing order after swap and flip operations.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "from typing import List\n\nclass Solution:\n    def minOperations(self, front: List[int], back: List[int]) -> int:\n        n = len(front)\n        limit = 1 << n\n        INF = float('inf')\n\n        # dp[mask][last_val]\n        dp = [[INF] * 32 for _ in range(limit)]\n        dp[0][0] = 0\n\n        popcount = [bin(i).count('1') for i in range(limit)]\n\n        for mask in range(limit - 1):\n            best = [INF] * 32\n            cur = INF\n            for v in range(32):\n                cur = min(cur, dp[mask][v])\n                best[v] = cur\n\n            if cur == INF:\n                continue\n\n            inv_mask = (limit - 1) ^ mask\n\n            for j in range(n):\n                if (mask >> j) & 1:\n                    continue\n\n                lower_unused = inv_mask & ((1 << j) - 1)\n                cost = popcount[lower_unused]\n\n                higher_used = popcount[mask >> (j + 1)]\n                flips = cost + higher_used\n\n                val = back[j] if flips & 1 else front[j]\n\n                prev_cost = best[val]\n                if prev_cost == INF:\n                    continue\n\n                new_mask = mask | (1 << j)\n                dp[new_mask][val] = min(dp[new_mask][val], prev_cost + cost)\n\n        ans = min(dp[limit - 1])\n        return ans if ans != INF else -1",
+"oracle_context": {
+"apis": [],
+"classes": ["Solution"],
+"vars": ["dp", "popcount"]
+},
+"test_cases": [
+{
+"id": "PY3_002_GEM_T01",
+"input": "front = [4,1,3], back = [2,1,6]",
+"expected": "1"
+},
+{
+"id": "PY3_002_GEM_T02",
+"input": "front = [2,1], back = [4,5]",
+"expected": "-1"
+}
+],
+"expected_output": "1, -1",
+"actual_output": "All test cases passed successfully (1114/1114)",
+"bug_analysis": {
+"bug_symptom": "NO_BUG",
+"bug_type": null,
+"bug_subtype": null,
+"bug_description": "The solution correctly models swap operations and flip parity using bitmask dynamic programming and passes all test cases.",
+"root_cause": null,
+"severity": null,
+"bug_location": null
+},
+"test_failures": [],
+"improvement_strategy": {
+"improved_prompt": null,
+"improvements_made": null
+},
+"regeneration_results": {
+"regenerated_code": null,
+"validation_results": {
+"passed": 1114,
+"failed": 0,
+"pass_rate": 1.0
+}
+},
+"metrics": {
+"original_pass_rate": 1.0,
+"improved_pass_rate": 0.0,
+"percent_improvement": 0.0
+}
+}
