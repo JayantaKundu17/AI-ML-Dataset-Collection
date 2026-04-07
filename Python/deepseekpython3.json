@@ -1,0 +1,71 @@
+{
+  "code_id": "PY3_003_DPSK",
+  "bug_id": "PY3_003_DPSK_B03",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Substring Optimization - Prefix Sum",
+    "created_date_timestamp": 1763234182
+  },
+  "original_docstring": "Longest Beautiful Substring",
+  "original_code": null,
+  "source_name": "geeksforgeeks - https://www.geeksforgeeks.org/problems/longest-beautiful-substring--131959/1",
+  "function_signature": "def longestSubstring(self, s)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a Python solution for the GeeksforGeeks problem Longest Beautiful Substring.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def longestSubstring(self, s):\n        vowels = set('aeiou')\n        n = len(s)\n\n        prefix = [0] * (n + 1)\n        for i in range(n):\n            if s[i] in vowels:\n                prefix[i+1] = prefix[i] - 2\n            else:\n                prefix[i+1] = prefix[i] + 1\n\n        max_len = -1\n        start_idx = -1\n\n        for l in range(n):\n            for r in range(l, n):\n                if prefix[r+1] - prefix[l] >= 0:\n                    length = r - l + 1\n                    if length > max_len or (length == max_len and l < start_idx):\n                        max_len = length\n                        start_idx = l\n\n        if max_len == -1:\n            return \"-1\"\n        return s[start_idx:start_idx + max_len]",
+  "oracle_context": {
+    "apis": [],
+    "classes": ["Solution"],
+    "vars": ["prefix"]
+  },
+  "test_cases": [
+    {
+      "id": "PY3_003_DPSK_T01",
+      "input": "s = \"geeks\"",
+      "expected": "\"eks\""
+    },
+    {
+      "id": "PY3_003_DPSK_T02",
+      "input": "s = \"gfg\"",
+      "expected": "\"gfg\""
+    }
+  ],
+  "expected_output": "eks, gfg",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Algorithm inefficiency",
+    "bug_subtype": "Quadratic substring enumeration",
+    "bug_description": "The solution uses a brute force nested loop leading to O(n^2) complexity.",
+    "root_cause": "Inefficient substring checking instead of optimized prefix methods",
+    "severity": "High",
+    "bug_location": "Nested loops iterating over substrings"
+  },
+  "test_failures": [
+    {
+      "test_id": "PY3_003_DPSK_T01",
+      "failure_type": "Time Limit Exceeded",
+      "details": "Fails on large inputs"
+    }
+  ],
+  "improvement_strategy": {
+    "improved_prompt": "Write an optimized solution using prefix sums and monotonic structures.",
+    "improvements_made": "Replace brute force with prefix based optimization"
+  },
+  "regeneration_results": {
+    "regenerated_code": null,
+    "validation_results": {
+      "passed": 1110,
+      "failed": 3,
+      "pass_rate": 0.997
+    }
+  },
+  "metrics": {
+    "original_pass_rate": 0.997,
+    "improved_pass_rate": 0.0,
+    "percent_improvement": 0.0
+  }
+}
