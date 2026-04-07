@@ -1,0 +1,65 @@
+{
+"code_id": "PY3_005_GEM",
+"bug_id": "PY3_005_GEM_B01",
+"language": "Python 3",
+"metadata": {
+"task_category": "Number Theory - Base Representation",
+"created_date_timestamp": 1763265983
+},
+"original_docstring": "Minimum Base Representation",
+"original_code": null,
+"source_name": "geeksforgeeks - [https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1](https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1)",
+"function_signature": "def minBase(self, M)",
+"llm_name": "Gemini",
+"prompt_text": "Write a Python solution for the GeeksforGeeks problem Minimum Base Representation.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "import math\n\nclass Solution:\n    def minBase(self, M):\n        if M == 1:\n            return 2\n\n        limit = int(math.isqrt(M))\n\n        for B in range(2, limit + 1):\n            n = M\n            d = n % B\n            n //= B\n            while n > 0:\n                if n % B != d:\n                    break\n                n //= B\n            else:\n                return B\n\n        for d in range(limit, 0, -1):\n            if M % d == 0:\n                B = (M // d) - 1\n                if B >= 2 and d < B:\n                    return B\n\n        return M + 1",
+"oracle_context": {
+"apis": ["math.isqrt"],
+"classes": ["Solution"],
+"vars": ["M", "B", "d"]
+},
+"test_cases": [
+{
+"id": "PY3_005_GEM_T01",
+"input": "M = 21",
+"expected": "4"
+},
+{
+"id": "PY3_005_GEM_T02",
+"input": "M = 63",
+"expected": "2"
+}
+],
+"expected_output": "4, 2",
+"actual_output": "All test cases passed",
+"bug_analysis": {
+"bug_symptom": "NO_BUG",
+"bug_type": null,
+"bug_subtype": null,
+"bug_description": "The solution correctly checks both multi-digit and two-digit representations and finds the minimum valid base.",
+"root_cause": null,
+"severity": null,
+"bug_location": null
+},
+"test_failures": [],
+"improvement_strategy": {
+"improved_prompt": null,
+"improvements_made": null
+},
+"regeneration_results": {
+"regenerated_code": null,
+"validation_results": {
+"passed": 1120,
+"failed": 0,
+"pass_rate": 1.0
+}
+},
+"metrics": {
+"original_pass_rate": 1.0,
+"improved_pass_rate": 0.0,
+"percent_improvement": 0.0
+}
+}
