@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_005_CHATGPT",
+  "bug_id": "HR_ARRAY_QUERIES_005_CHATGPT_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Optimization",
+    "created_date_timestamp": 1763322600
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "public static int arrayAndQueries(int[] A, int[][] queries)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static int arrayAndQueries(int[] A, int[][] queries) {\n    int MOD = 1000000007;\n    int maxVal = 100000;\n\n    int[] freq = new int[maxVal + 2];\n    int[] countFreq = new int[A.length + 2];\n\n    for (int val : A) {\n        freq[val]++;\n    }\n\n    int maxFreq = 0;\n    for (int i = 0; i <= maxVal; i++) {\n        if (freq[i] > 0) {\n            countFreq[freq[i]]++;\n            maxFreq = Math.max(maxFreq, freq[i]);\n        }\n    }\n\n    long result = 0;\n\n    for (int i = 0; i < queries.length; i++) {\n        int idx = queries[i][0] - 1;\n        int newVal = queries[i][1];\n        int oldVal = A[idx];\n\n        // remove old value\n        countFreq[freq[oldVal]]--;\n        freq[oldVal]--;\n        if (freq[oldVal] > 0) {\n            countFreq[freq[oldVal]]++;\n        }\n\n        while (maxFreq > 0 && countFreq[maxFreq] == 0) {\n            maxFreq--;\n        }\n\n        // add new value\n        countFreq[freq[newVal]]--;\n        freq[newVal]++;\n        countFreq[freq[newVal]]++;\n\n        if (freq[newVal] > maxFreq) {\n            maxFreq = freq[newVal];\n        }\n\n        A[idx] = newVal;\n\n        result = (result + (long)(i + 1) * maxFreq) % MOD;\n    }\n\n    return (int) result;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["freq", "countFreq", "maxFreq", "result"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_005_CHATGPT_T01",
+      "input": "A=[2,2,1,1,1], queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect problem modeling",
+    "bug_description": "The solution incorrectly assumes that the answer equals the maximum frequency, whereas the problem requires computing the minimum number of beautiful subsequences based on value differences.",
+    "root_cause": "Misinterpretation of the mathematical definition of beautiful subsequences.",
+    "severity": "High",
+    "bug_location": "Final computation using maxFreq"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ALMOST_EQUAL_002_GEMINI",
+  "bug_id": "HR_ALMOST_EQUAL_002_GEMINI_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range Queries / Mo's Algorithm",
+    "created_date_timestamp": 1763363200
+  },
+  "original_docstring": "Almost Equal - Advanced",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/almost-equal-advanced/problem",
+  "function_signature": "public static long[] solve(int[] H, int[][] queries, int K)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Java solution using Mo's Algorithm for the HackerRank problem Almost Equal - Advanced.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static long[] solve(int[] H, int[][] queries, int K) {\n    int n = H.length;\n    int q = queries.length;\n    long[] ans = new long[q];\n\n    java.util.Arrays.sort(queries, (a, b) -> {\n        int blockA = a[0] / (int)Math.sqrt(n);\n        int blockB = b[0] / (int)Math.sqrt(n);\n        if (blockA != blockB) return blockA - blockB;\n        return a[1] - b[1];\n    });\n\n    int currL = 0, currR = -1;\n    long currAns = 0;\n\n    java.util.TreeMap<Integer, Integer> freq = new java.util.TreeMap<>();\n\n    for (int i = 0; i < q; i++) {\n        int L = queries[i][0];\n        int R = queries[i][1];\n\n        while (currR < R) {\n            currR++;\n            currAns += countPairs(freq, H[currR], K);\n            freq.put(H[currR], freq.getOrDefault(H[currR], 0) + 1);\n        }\n\n        while (currR > R) {\n            freq.put(H[currR], freq.get(H[currR]) - 1);\n            currAns -= countPairs(freq, H[currR], K);\n            currR--;\n        }\n\n        while (currL < L) {\n            freq.put(H[currL], freq.get(H[currL]) - 1);\n            currAns -= countPairs(freq, H[currL], K);\n            currL++;\n        }\n\n        while (currL > L) {\n            currL--;\n            currAns += countPairs(freq, H[currL], K);\n            freq.put(H[currL], freq.getOrDefault(H[currL], 0) + 1);\n        }\n\n        ans[i] = currAns;\n    }\n\n    return ans;\n}\n\nprivate static long countPairs(java.util.TreeMap<Integer, Integer> freq, int val, int K) {\n    long count = 0;\n    for (int key : freq.subMap(val - K, true, val + K, true).keySet()) {\n        count += freq.get(key);\n    }\n    return count;\n}",
+  "oracle_context": {
+    "apis": ["java.util.TreeMap", "java.util.Arrays"],
+    "classes": [],
+    "vars": ["freq", "currAns", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ALMOST_EQUAL_002_GEMINI_T01",
+      "input": "H=[1,3,4,3,0], queries=[[0,1],[1,3],[0,4]], K=2",
+      "expected": "[1,3,6]"
+    }
+  ],
+  "expected_output": "[1,3,6]",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Inefficient range query inside Mo's",
+    "bug_description": "Using TreeMap.subMap for each update leads to O(n) behavior per operation, making overall complexity too slow.",
+    "root_cause": "Inefficient counting of valid pairs using TreeMap iteration instead of Fenwick Tree or coordinate compression.",
+    "severity": "High",
+    "bug_location": "countPairs function iterating over subMap"
+  }
+}

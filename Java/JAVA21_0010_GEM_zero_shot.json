@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_006_GEMINI",
+  "bug_id": "HR_TICKET_TO_RIDE_006_GEMINI_B00",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / LCA + Difference on Tree",
+    "created_date_timestamp": 1763413200
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "public static void main(String[] args)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Java solution using LCA and tree difference technique for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "import java.io.*;\nimport java.util.*;\n\npublic class Solution {\n    static int N, LOG = 17;\n    static List<int[]>[] adj;\n    static int[][] parent;\n    static int[] depth;\n    static long[] val;\n    static long ans = 0;\n\n    static void dfs(int u, int p) {\n        parent[0][u] = p;\n        for (int[] e : adj[u]) {\n            int v = e[0];\n            if (v == p) continue;\n            depth[v] = depth[u] + 1;\n            dfs(v, u);\n        }\n    }\n\n    static int lca(int u, int v) {\n        if (depth[u] < depth[v]) {\n            int t = u; u = v; v = t;\n        }\n        for (int i = LOG - 1; i >= 0; i--) {\n            if (((depth[u] - depth[v]) & (1 << i)) != 0) {\n                u = parent[i][u];\n            }\n        }\n        if (u == v) return u;\n        for (int i = LOG - 1; i >= 0; i--) {\n            if (parent[i][u] != parent[i][v]) {\n                u = parent[i][u];\n                v = parent[i][v];\n            }\n        }\n        return parent[0][u];\n    }\n\n    static long dfsAcc(int u, int p) {\n        for (int[] e : adj[u]) {\n            int v = e[0];\n            int w = e[1];\n            if (v == p) continue;\n            long sub = dfsAcc(v, u);\n            ans = Math.max(ans, sub - w);\n            val[u] += sub;\n        }\n        return val[u];\n    }\n\n    public static void main(String[] args) throws Exception {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st;\n\n        N = Integer.parseInt(br.readLine());\n\n        adj = new ArrayList[N];\n        for (int i = 0; i < N; i++) adj[i] = new ArrayList<>();\n\n        for (int i = 0; i < N - 1; i++) {\n            st = new StringTokenizer(br.readLine());\n            int u = Integer.parseInt(st.nextToken()) - 1;\n            int v = Integer.parseInt(st.nextToken()) - 1;\n            int w = Integer.parseInt(st.nextToken());\n            adj[u].add(new int[]{v, w});\n            adj[v].add(new int[]{u, w});\n        }\n\n        parent = new int[LOG][N];\n        depth = new int[N];\n        val = new long[N];\n\n        dfs(0, -1);\n\n        for (int i = 1; i < LOG; i++) {\n            for (int j = 0; j < N; j++) {\n                if (parent[i-1][j] == -1) parent[i][j] = -1;\n                else parent[i][j] = parent[i-1][parent[i-1][j]];\n            }\n        }\n\n        int M = Integer.parseInt(br.readLine());\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken()) - 1;\n            int b = Integer.parseInt(st.nextToken()) - 1;\n            long c = Long.parseLong(st.nextToken());\n\n            int l = lca(a, b);\n\n            val[a] += c;\n            val[b] += c;\n            val[l] -= c;\n            if (parent[0][l] != -1) val[parent[0][l]] -= c;\n        }\n\n        dfsAcc(0, -1);\n\n        System.out.println(ans);\n    }\n}",
+  "oracle_context": {
+    "apis": ["BufferedReader", "StringTokenizer", "Math.max"],
+    "classes": ["Solution"],
+    "vars": ["adj", "parent", "depth", "val", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_006_GEMINI_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "13",
+  "bug_analysis": {
+    "bug_symptom": "NO_BUG",
+    "bug_type": null,
+    "bug_subtype": null,
+    "bug_description": "The solution correctly applies LCA with difference-on-tree and aggregation, producing correct results efficiently.",
+    "root_cause": null,
+    "severity": null,
+    "bug_location": null
+  }
+}

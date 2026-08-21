@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ALMOST_EQUAL_001_CHATGPT",
+  "bug_id": "HR_ALMOST_EQUAL_001_CHATGPT_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range Queries / Two Pointers",
+    "created_date_timestamp": 1763360200
+  },
+  "original_docstring": "Almost Equal - Advanced",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/almost-equal-advanced/problem",
+  "function_signature": "public static long countPairs(int[] H, int l, int r, int K)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write a Java solution for the HackerRank problem Almost Equal - Advanced.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static long countPairs(int[] H, int l, int r, int K) {\n    long count = 0;\n\n    for (int i = l; i <= r; i++) {\n        for (int j = i + 1; j <= r; j++) {\n            if (Math.abs(H[i] - H[j]) <= K) {\n                count++;\n            }\n        }\n    }\n\n    return count;\n}",
+  "oracle_context": {
+    "apis": ["Math.abs"],
+    "classes": [],
+    "vars": ["count"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ALMOST_EQUAL_001_CHATGPT_T01",
+      "input": "H=[1,3,4,3,0], l=0, r=4, K=2",
+      "expected": "6"
+    }
+  ],
+  "expected_output": "6",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Quadratic per query",
+    "bug_description": "The solution uses O(n^2) computation for each query, which is too slow for constraints up to 100000 queries and elements.",
+    "root_cause": "Brute-force nested loops without using efficient data structures like Fenwick Tree, Mo’s Algorithm, or two pointers with sorting.",
+    "severity": "High",
+    "bug_location": "Double nested loop inside countPairs function"
+  }
+}

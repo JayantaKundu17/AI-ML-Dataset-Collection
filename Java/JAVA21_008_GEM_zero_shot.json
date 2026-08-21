@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_008_GEMINI",
+  "bug_id": "HR_ARRAY_PAIRS_008_GEMINI_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range / Optimization",
+    "created_date_timestamp": 1763353600
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "public static long countPairs(int[] a)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static long countPairs(int[] a) {\n    int n = a.length;\n    long count = 0;\n\n    for (int i = 0; i < n; i++) {\n        int maxVal = a[i];\n        for (int j = i + 1; j < n; j++) {\n            if (a[j] > maxVal) {\n                maxVal = a[j];\n            }\n            if ((long)a[i] * a[j] <= maxVal) {\n                count++;\n            }\n        }\n    }\n\n    return count;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["count", "maxVal"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_008_GEMINI_T01",
+      "input": "a = [1, 1, 2, 4, 2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Quadratic complexity",
+    "bug_description": "The solution uses a nested loop leading to O(n^2) time complexity, which fails for large inputs (n up to 100000).",
+    "root_cause": "Brute-force approach without optimization for range maximum or efficient pair counting.",
+    "severity": "High",
+    "bug_location": "Double nested loop over array"
+  }
+}

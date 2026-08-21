@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_009_DPSK",
+  "bug_id": "HR_ARRAY_PAIRS_009_DPSK_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range Maximum / Brute Force",
+    "created_date_timestamp": 1763357200
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "public static long countPairs(int[] arr)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a Java solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static long countPairs(int[] arr) {\n    int n = arr.length;\n    long count = 0;\n\n    for (int i = 0; i < n; i++) {\n        int maxVal = arr[i];\n        for (int j = i + 1; j < n; j++) {\n            if (arr[j] > maxVal) {\n                maxVal = arr[j];\n            }\n            if ((long) arr[i] * arr[j] <= maxVal) {\n                count++;\n            }\n        }\n    }\n\n    return count;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["count", "maxVal"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_009_DPSK_T01",
+      "input": "arr = [1, 1, 2, 4, 2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Quadratic time complexity",
+    "bug_description": "The solution uses a nested loop (O(n^2)) which is too slow for large inputs (n up to 100000).",
+    "root_cause": "Brute-force approach without using optimized techniques like divide-and-conquer or stack-based segmentation.",
+    "severity": "High",
+    "bug_location": "Double nested loop iterating over all pairs"
+  }
+}

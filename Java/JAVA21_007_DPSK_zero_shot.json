@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_006_DPSK",
+  "bug_id": "HR_ARRAY_QUERIES_006_DPSK_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Optimization",
+    "created_date_timestamp": 1763328200
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "public static int arrayAndQueries(int[] A, int[][] queries)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static int arrayAndQueries(int[] A, int[][] queries) {\n    int MOD = 1000000007;\n    int maxVal = 1000000;\n\n    int[] freq = new int[maxVal + 2];\n\n    for (int val : A) {\n        freq[val]++;\n    }\n\n    long result = 0;\n\n    for (int i = 0; i < queries.length; i++) {\n        int idx = queries[i][0] - 1;\n        int newVal = queries[i][1];\n        int oldVal = A[idx];\n\n        freq[oldVal]--;\n        freq[newVal]++;\n        A[idx] = newVal;\n\n        int ans = 0;\n        int prev = 0;\n\n        for (int v = 0; v <= maxVal; v++) {\n            if (freq[v] > prev) {\n                ans += freq[v] - prev;\n            }\n            prev = freq[v];\n        }\n\n        result = (result + (long)(i + 1) * ans) % MOD;\n    }\n\n    return (int) result;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["freq", "result", "ans", "prev"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_006_DPSK_T01",
+      "input": "A=[2,2,1,1,1], queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Inefficient full recomputation",
+    "bug_description": "The solution recomputes the entire answer by iterating over all possible values for every query, leading to excessive time complexity.",
+    "root_cause": "O(Q * maxVal) complexity due to full scan of frequency array on each update.",
+    "severity": "High",
+    "bug_location": "Loop iterating from 0 to maxVal inside each query"
+  }
+}

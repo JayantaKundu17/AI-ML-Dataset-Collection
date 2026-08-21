@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TRIPLETS_004_CHATGPT",
+  "bug_id": "HR_TRIPLETS_004_CHATGPT_NONE",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Distinct Triplets Counting",
+    "created_date_timestamp": 1763303600
+  },
+  "original_docstring": "Triplets",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/triplets/problem",
+  "function_signature": "def countTriplets(arr)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimal Python solution for the HackerRank problem Triplets.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def countTriplets(arr):\n    # Remove duplicates since we need distinct values only\n    unique = sorted(set(arr))\n    n = len(unique)\n\n    # Count combinations of 3 distinct increasing values\n    if n < 3:\n        return 0\n\n    # Number of ways to choose 3 distinct increasing values\n    return (n * (n - 1) * (n - 2)) // 6",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["unique", "n"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TRIPLETS_004_CHATGPT_T01",
+      "input": "arr = [1, 1, 2, 2, 3, 4]",
+      "expected": "4"
+    }
+  ],
+  "expected_output": "4",
+  "actual_output": "4",
+  "bug_analysis": {
+    "bug_symptom": "NONE",
+    "bug_type": "No bug",
+    "bug_subtype": null,
+    "bug_description": "Correctly counts distinct ascending triplets by reducing to unique values and computing combinations.",
+    "root_cause": null,
+    "severity": "None",
+    "bug_location": null
+  }
+}

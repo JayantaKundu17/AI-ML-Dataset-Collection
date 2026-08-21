@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_007_CHATGPT",
+  "bug_id": "HR_ARRAY_PAIRS_007_CHATGPT_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range Maximum / Stack",
+    "created_date_timestamp": 1763350600
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "public static long countPairs(int[] a)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "public static long countPairs(int[] a) {\n    int n = a.length;\n    long ans = 0;\n\n    int[] left = new int[n];\n    int[] right = new int[n];\n    java.util.Stack<Integer> stack = new java.util.Stack<>();\n\n    // previous greater\n    for (int i = 0; i < n; i++) {\n        while (!stack.isEmpty() && a[stack.peek()] < a[i]) {\n            stack.pop();\n        }\n        left[i] = stack.isEmpty() ? -1 : stack.peek();\n        stack.push(i);\n    }\n\n    stack.clear();\n\n    // next greater\n    for (int i = n - 1; i >= 0; i--) {\n        while (!stack.isEmpty() && a[stack.peek()] < a[i]) {\n            stack.pop();\n        }\n        right[i] = stack.isEmpty() ? n : stack.peek();\n        stack.push(i);\n    }\n\n    for (int i = 0; i < n; i++) {\n        int l = left[i] + 1;\n        int r = right[i] - 1;\n\n        for (int x = l; x <= i; x++) {\n            for (int y = i + 1; y <= r; y++) {\n                if ((long)a[x] * a[y] <= a[i]) {\n                    ans++;\n                }\n            }\n        }\n    }\n\n    return ans;\n}",
+  "oracle_context": {
+    "apis": ["java.util.Stack"],
+    "classes": [],
+    "vars": ["left", "right", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_007_CHATGPT_T01",
+      "input": "a = [1, 1, 2, 4, 2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Overlapping interval counting",
+    "bug_description": "The solution counts pairs multiple times due to overlapping segments when treating each index as maximum independently.",
+    "root_cause": "Incorrect segmentation logic that does not ensure unique counting of pairs.",
+    "severity": "High",
+    "bug_location": "Nested loops inside each segment"
+  }
+}

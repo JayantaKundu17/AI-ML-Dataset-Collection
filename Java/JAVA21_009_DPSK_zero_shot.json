@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ALMOST_EQUAL_003_DPSK",
+  "bug_id": "HR_ALMOST_EQUAL_003_DPSK_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Data Structures - Range Queries / BIT",
+    "created_date_timestamp": 1763367200
+  },
+  "original_docstring": "Almost Equal - Advanced",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/almost-equal-advanced/problem",
+  "function_signature": "static long[] solve(int[] H, int[][] queries, int K)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Almost Equal - Advanced.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "static long[] solve(int[] H, int[][] queries, int K) {\n    int n = H.length;\n    int q = queries.length;\n    long[] ans = new long[q];\n\n    int[] unique = java.util.Arrays.stream(H).distinct().sorted().toArray();\n\n    FenwickTree bit = new FenwickTree(unique.length);\n\n    for (int i = 0; i < q; i++) {\n        int l = queries[i][0];\n        int r = queries[i][1];\n\n        long count = 0;\n\n        for (int j = l; j <= r; j++) {\n            int h = H[j];\n            int low = lowerBound(unique, h - K);\n            int high = upperBound(unique, h + K) - 1;\n            count += bit.rangeSum(low, high);\n            bit.update(indexOf(unique, h), 1);\n        }\n\n        ans[i] = count;\n\n        // reset BIT\n        bit.clear();\n    }\n\n    return ans;\n}\n\nstatic int lowerBound(int[] arr, int val) {\n    int l = 0, r = arr.length;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (arr[m] >= val) r = m;\n        else l = m + 1;\n    }\n    return l;\n}\n\nstatic int upperBound(int[] arr, int val) {\n    int l = 0, r = arr.length;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (arr[m] > val) r = m;\n        else l = m + 1;\n    }\n    return l;\n}",
+  "oracle_context": {
+    "apis": ["java.util.Arrays.stream"],
+    "classes": ["FenwickTree"],
+    "vars": ["bit", "unique", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ALMOST_EQUAL_003_DPSK_T01",
+      "input": "H=[1,3,4,3,0], queries=[[0,1],[1,3],[0,4]], K=2",
+      "expected": "[1,3,6]"
+    }
+  ],
+  "expected_output": "[1,3,6]",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Rebuilding structure per query",
+    "bug_description": "The solution rebuilds the Fenwick Tree for each query leading to O(Q * N log N) complexity which is too slow.",
+    "root_cause": "Lack of offline processing (e.g., Mo’s algorithm) or incremental updates across queries.",
+    "severity": "High",
+    "bug_location": "Inner loop rebuilding BIT for every query"
+  }
+}

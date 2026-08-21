@@ -1,0 +1,47 @@
+{
+  "code_id": "PY3_003_DPSK",
+  "bug_id": "PY3_003_DPSK_B04",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Substring Optimization - Prefix Sum",
+    "created_date_timestamp": 1763249123
+  },
+  "original_docstring": "Longest Beautiful Substring",
+  "original_code": null,
+  "source_name": "geeksforgeeks - https://www.geeksforgeeks.org/problems/longest-beautiful-substring--131959/1",
+  "function_signature": "def longestSubstring(self, s)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a Python solution for the GeeksforGeeks problem Longest Beautiful Substring.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def longestSubstring(self, s):\n        vowels = set('aeiou')\n        n = len(s)\n\n        prefix = 0\n        best = {}\n        max_len = 0\n        start_idx = -1\n\n        for i in range(n):\n            if s[i] in vowels:\n                prefix -= 2\n            else:\n                prefix += 1\n\n            if prefix >= 0:\n                if i + 1 > max_len:\n                    max_len = i + 1\n                    start_idx = 0\n\n            if prefix not in best:\n                best[prefix] = i\n\n            for k in best:\n                if k <= prefix:\n                    length = i - best[k]\n                    if length > max_len:\n                        max_len = length\n                        start_idx = best[k] + 1\n\n        return \"-1\" if max_len == 0 else s[start_idx:start_idx + max_len]",
+  "oracle_context": {
+    "apis": [],
+    "classes": ["Solution"],
+    "vars": ["prefix", "best"]
+  },
+  "test_cases": [
+    {
+      "id": "PY3_003_DPSK_T01",
+      "input": "s = \"geeks\"",
+      "expected": "\"eks\""
+    },
+    {
+      "id": "PY3_003_DPSK_T02",
+      "input": "s = \"gfg\"",
+      "expected": "\"gfg\""
+    }
+  ],
+  "expected_output": "eks, gfg",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Algorithm inefficiency",
+    "bug_subtype": "Nested iteration over prefix states",
+    "bug_description": "The solution iterates over all stored prefix values for each index causing quadratic complexity.",
+    "root_cause": "Inefficient prefix comparison instead of optimized data structures",
+    "severity": "High",
+    "bug_location": "Inner loop over dictionary"
+  }
+}

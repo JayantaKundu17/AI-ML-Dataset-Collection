@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_006_GEMINI",
+  "bug_id": "HR_ARRAY_QUERIES_006_GEMINI_B01",
+  "language": "Java",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Differential",
+    "created_date_timestamp": 1763325400
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "public static int arrayAndQueries(int n, int[] A, int[][] queries)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Java solution for the HackerRank problem Array and Queries using frequency difference logic.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "import java.util.*;\n\npublic class Solution {\n    static Map<Integer, Integer> counts = new HashMap<>();\n    static int currentF = 0;\n\n    public static int arrayAndQueries(int n, int[] A, int[][] queries) {\n        int MOD = 1000000007;\n\n        for (int v : A) {\n            counts.put(v, counts.getOrDefault(v, 0) + 1);\n        }\n\n        for (int v : counts.keySet()) {\n            currentF += getContribution(v);\n        }\n\n        long totalAns = 0;\n\n        for (int i = 0; i < queries.length; i++) {\n            int idx = queries[i][0] - 1;\n            int newVal = queries[i][1];\n            int oldVal = A[idx];\n\n            Set<Integer> affected = new HashSet<>(Arrays.asList(oldVal, oldVal + 1, newVal, newVal + 1));\n\n            for (int v : affected) {\n                currentF -= getContribution(v);\n            }\n\n            counts.put(oldVal, counts.get(oldVal) - 1);\n            if (counts.get(oldVal) == 0) counts.remove(oldVal);\n\n            counts.put(newVal, counts.getOrDefault(newVal, 0) + 1);\n\n            A[idx] = newVal;\n\n            for (int v : affected) {\n                currentF += getContribution(v);\n            }\n\n            long term = ((long)(i + 1) * (currentF % MOD)) % MOD;\n            totalAns = (totalAns + term) % MOD;\n        }\n\n        return (int) totalAns;\n    }\n\n    private static int getContribution(int v) {\n        int cv = counts.getOrDefault(v, 0);\n        int cvPrev = counts.getOrDefault(v - 1, 0);\n        return Math.max(0, cv - cvPrev);\n    }\n}",
+  "oracle_context": {
+    "apis": ["java.util.HashMap", "java.util.HashSet", "java.util.Arrays"],
+    "classes": ["Solution"],
+    "vars": ["counts", "currentF", "totalAns"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_006_GEMINI_T01",
+      "input": "n=5, A=[2,2,1,1,1], queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Partial Correct",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Edge case error",
+    "bug_subtype": "Incorrect incremental update",
+    "bug_description": "The differential update logic fails on certain edge cases, leading to incorrect results for some test cases (11/37 failed).",
+    "root_cause": "Improper handling of affected values and boundary conditions when updating contributions.",
+    "severity": "Medium",
+    "bug_location": "Contribution update logic using affected set"
+  }
+}
