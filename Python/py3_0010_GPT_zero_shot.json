@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_004_CHATGPT",
+  "bug_id": "HR_TICKET_TO_RIDE_004_CHATGPT_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / DP on Tree",
+    "created_date_timestamp": 1763400200
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "def solve()",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def solve(self):\n        import sys\n        sys.setrecursionlimit(10**7)\n        input = sys.stdin.readline\n\n        n = int(input())\n        adj = [[] for _ in range(n)]\n\n        for _ in range(n - 1):\n            u, v, w = map(int, input().split())\n            u -= 1\n            v -= 1\n            adj[u].append((v, w))\n            adj[v].append((u, w))\n\n        val = [0] * n\n\n        m = int(input())\n        for _ in range(m):\n            u, v, cost = map(int, input().split())\n            u -= 1\n            v -= 1\n            val[u] += cost\n            val[v] += cost\n\n        ans = 0\n\n        def dfs(u, p):\n            nonlocal ans\n\n            best1 = 0\n            best2 = 0\n\n            for v, w in adj[u]:\n                if v == p:\n                    continue\n\n                child = dfs(v, u) - w\n\n                if child > best1:\n                    best2 = best1\n                    best1 = child\n                elif child > best2:\n                    best2 = child\n\n            ans = max(ans, val[u] + best1 + best2)\n\n            return val[u] + best1\n\n        dfs(0, -1)\n\n        print(ans)\n\nif __name__ == \"__main__\":\n    Solution().solve()",
+  "oracle_context": {
+    "apis": ["sys.stdin.readline"],
+    "classes": ["Solution"],
+    "vars": ["adj", "val", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_004_CHATGPT_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect ticket contribution modeling",
+    "bug_description": "The solution treats ticket costs as node weights at endpoints and applies tree DP, but ticket value depends on entire path between nodes, not just endpoints.",
+    "root_cause": "Failure to propagate ticket contributions along the full path using LCA or difference-on-tree techniques.",
+    "severity": "High",
+    "bug_location": "Ticket accumulation logic and DFS DP"
+  }
+}

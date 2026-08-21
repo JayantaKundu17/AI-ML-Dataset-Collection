@@ -1,0 +1,52 @@
+{
+"code_id": "PY3_005_DPSK",
+"bug_id": "PY3_005_DPSK_B01",
+"language": "Python 3",
+"metadata": {
+"task_category": "Number Theory - Base Representation",
+"created_date_timestamp": 1763269981
+},
+"original_docstring": "Minimum Base Representation",
+"original_code": null,
+"source_name": "geeksforgeeks - [https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1](https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1)",
+"function_signature": "def minBase(self, M)",
+"llm_name": "DeepSeek",
+"prompt_text": "Write a Python solution for the GeeksforGeeks problem Minimum Base Representation.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "import math\n\nclass Solution:\n    def minBase(self, M):\n        if M == 1:\n            return 2\n\n        limit = int(math.sqrt(M))\n\n        # Check for bases where representation has more than 2 digits\n        for B in range(2, limit + 1):\n            num = M\n            digit = num % B\n            valid = True\n\n            while num > 0:\n                if num % B != digit:\n                    valid = False\n                    break\n                num //= B\n\n            if valid:\n                return B\n\n        # Missing optimized divisor-based logic here\n        return M - 1",
+"oracle_context": {
+"apis": ["math.sqrt"],
+"classes": ["Solution"],
+"vars": ["M", "B", "digit"]
+},
+"test_cases": [
+{
+"id": "PY3_005_DPSK_T01",
+"input": "M = 21",
+"expected": "4"
+},
+{
+"id": "PY3_005_DPSK_T02",
+"input": "M = 63",
+"expected": "2"
+},
+{
+"id": "PY3_005_DPSK_T03",
+"input": "M = 42",
+"expected": "4"
+}
+],
+"expected_output": "4, 2, 4",
+"actual_output": "Wrong Answer",
+"bug_analysis": {
+"bug_symptom": "WRONG_ANSWER",
+"bug_type": "Logic error",
+"bug_subtype": "Incomplete mathematical handling",
+"bug_description": "The solution only checks bases up to sqrt(M) and fails to consider cases where the number has exactly two digits in base B.",
+"root_cause": "Missing divisor-based approach derived from representation M = d * (B + 1).",
+"severity": "High",
+"bug_location": "Final return logic and absence of second phase loop"
+}
+}

@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_005_DPSK",
+  "bug_id": "HR_ARRAY_QUERIES_005_DPSK_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Optimization",
+    "created_date_timestamp": 1763320200
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "def arrayAndQueries(A, queries)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def min_beautiful_subseqs(counts, max_val):\n    ans = 0\n    prev = 0\n    for v in range(max_val + 1):\n        if counts[v] > prev:\n            ans += counts[v] - prev\n        prev = counts[v]\n    return ans\n\n\ndef arrayAndQueries(A, queries):\n    MOD = 10**9 + 7\n    from collections import defaultdict\n\n    counts = defaultdict(int)\n    for v in A:\n        counts[v] += 1\n\n    max_val = max(A) if A else 0\n    total = 0\n\n    for idx, (pos, new_val) in enumerate(queries, start=1):\n        pos -= 1\n        old_val = A[pos]\n\n        counts[old_val] -= 1\n        counts[new_val] += 1\n        A[pos] = new_val\n\n        if new_val > max_val:\n            max_val = new_val\n\n        ans = min_beautiful_subseqs(counts, max_val)\n        total = (total + idx * ans) % MOD\n\n    return total",
+  "oracle_context": {
+    "apis": ["collections.defaultdict"],
+    "classes": [],
+    "vars": ["counts", "max_val", "total", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_005_DPSK_T01",
+      "input": "A=[2,2,1,1,1], queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Inefficient recomputation",
+    "bug_description": "The solution recomputes the entire answer from scratch for each query, leading to O(Q * max_val) complexity which is too slow for large constraints.",
+    "root_cause": "Lack of incremental updates for maintaining the minimum number of beautiful subsequences.",
+    "severity": "High",
+    "bug_location": "min_beautiful_subseqs function called inside query loop"
+  }
+}

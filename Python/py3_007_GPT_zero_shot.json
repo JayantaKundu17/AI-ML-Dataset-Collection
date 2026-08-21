@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_004_CHATGPT",
+  "bug_id": "HR_ARRAY_QUERIES_004_CHATGPT_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Optimization",
+    "created_date_timestamp": 1763316400
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "def arrayAndQueries(self, A, queries)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def arrayAndQueries(self, A, queries):\n        MOD = 10**9 + 7\n        from collections import defaultdict\n\n        freq = defaultdict(int)\n        countFreq = defaultdict(int)\n\n        # initialize frequency\n        for val in A:\n            freq[val] += 1\n\n        maxFreq = 0\n        for val in freq:\n            countFreq[freq[val]] += 1\n            maxFreq = max(maxFreq, freq[val])\n\n        result = 0\n\n        for i, (idx, val) in enumerate(queries):\n            idx -= 1\n            old = A[idx]\n\n            # remove old value\n            countFreq[freq[old]] -= 1\n            freq[old] -= 1\n            if freq[old] > 0:\n                countFreq[freq[old]] += 1\n\n            while maxFreq > 0 and countFreq[maxFreq] == 0:\n                maxFreq -= 1\n\n            # add new value\n            countFreq[freq[val]] -= 1\n            freq[val] += 1\n            countFreq[freq[val]] += 1\n\n            if freq[val] > maxFreq:\n                maxFreq = freq[val]\n\n            A[idx] = val\n\n            result = (result + (i + 1) * maxFreq) % MOD\n\n        return result",
+  "oracle_context": {
+    "apis": ["collections.defaultdict"],
+    "classes": ["Solution"],
+    "vars": ["freq", "countFreq", "maxFreq", "result"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_004_CHATGPT_T01",
+      "input": "A=[2,2,1,1,1], queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect interpretation of beautiful subsequences",
+    "bug_description": "The solution uses maximum frequency as the answer, but the problem requires computing the minimum number of beautiful subsequences, which is not always equal to max frequency.",
+    "root_cause": "Misinterpretation of the problem by equating answer to maximum frequency.",
+    "severity": "High",
+    "bug_location": "Final computation using maxFreq"
+  }
+}

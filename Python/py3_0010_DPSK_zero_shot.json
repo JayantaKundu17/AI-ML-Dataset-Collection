@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_005_DPSK",
+  "bug_id": "HR_TICKET_TO_RIDE_005_DPSK_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / All-Pairs Brute Force",
+    "created_date_timestamp": 1763407200
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "def solve()",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a Python solution for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def solve():\n    import sys\n    input = sys.stdin.readline\n\n    n = int(input())\n    adj = [[] for _ in range(n)]\n\n    for _ in range(n - 1):\n        u, v, w = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append((v, w))\n        adj[v].append((u, w))\n\n    # compute all pair shortest paths (tree distances)\n    dist = [[0]*n for _ in range(n)]\n\n    def dfs(start, u, parent, d):\n        dist[start][u] = d\n        for v, w in adj[u]:\n            if v != parent:\n                dfs(start, v, u, d + w)\n\n    for i in range(n):\n        dfs(i, i, -1, 0)\n\n    m = int(input())\n    tickets = []\n    for _ in range(m):\n        a, b, cost = map(int, input().split())\n        tickets.append((a-1, b-1, cost))\n\n    max_profit = 0\n\n    for u in range(n):\n        for v in range(u, n):\n            total_cost = 0\n\n            for a, b, cost in tickets:\n                if dist[u][a] + dist[a][v] == dist[u][v] and \\\n                   dist[u][b] + dist[b][v] == dist[u][v]:\n                    total_cost += cost\n\n            profit = total_cost - dist[u][v]\n            if profit > max_profit:\n                max_profit = profit\n\n    print(max_profit)\n\nif __name__ == \"__main__\":\n    solve()",
+  "oracle_context": {
+    "apis": ["sys.stdin.readline"],
+    "classes": [],
+    "vars": ["dist", "tickets", "max_profit"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_005_DPSK_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "All-pairs + nested loops",
+    "bug_description": "The solution computes all-pairs distances O(n^2) and then evaluates all pairs (u,v) with all tickets O(n^2 * m), which is infeasible.",
+    "root_cause": "Brute-force approach ignoring tree properties and efficient path aggregation techniques.",
+    "severity": "Critical",
+    "bug_location": "Nested loops over u, v, and tickets"
+  }
+}

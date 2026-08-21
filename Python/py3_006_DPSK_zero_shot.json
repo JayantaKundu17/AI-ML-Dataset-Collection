@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TRIPLETS_003_DPSK",
+  "bug_id": "HR_TRIPLETS_003_DPSK_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Distinct Triplets Counting",
+    "created_date_timestamp": 1763302400
+  },
+  "original_docstring": "Triplets",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/triplets/problem",
+  "function_signature": "def count_ascending_triplets(arr)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a Python solution for the HackerRank problem Triplets.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def count_ascending_triplets(arr):\n    distinct_vals = sorted(set(arr))\n    m = len(distinct_vals)\n\n    # map value to first and last occurrence index\n    pos = {}\n    for i, val in enumerate(arr):\n        if val not in pos:\n            pos[val] = [i, i]\n        else:\n            pos[val][1] = i\n\n    total = 0\n\n    for i in range(m):\n        a = distinct_vals[i]\n        for j in range(i + 1, m):\n            b = distinct_vals[j]\n\n            left_bound = pos[b][0]\n            right_bound = pos[b][1]\n\n            cntA = 0\n            for k in range(i):\n                if pos[distinct_vals[k]][0] < left_bound:\n                    cntA += 1\n\n            cntC = 0\n            for k in range(j + 1, m):\n                if pos[distinct_vals[k]][1] > right_bound:\n                    cntC += 1\n\n            total += cntA * cntC\n\n    return total",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["distinct_vals", "pos", "total"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TRIPLETS_003_DPSK_T01",
+      "input": "arr = [1, 1, 2, 2, 3, 4]",
+      "expected": "4"
+    }
+  ],
+  "expected_output": "4",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect positional constraint handling",
+    "bug_description": "The solution incorrectly applies positional constraints while counting triplets, whereas the problem only requires distinct ascending values irrespective of positions.",
+    "root_cause": "Misinterpretation of the problem by introducing unnecessary index-based constraints instead of counting distinct value triplets.",
+    "severity": "High",
+    "bug_location": "Nested loops applying left_bound and right_bound conditions"
+  }
+}

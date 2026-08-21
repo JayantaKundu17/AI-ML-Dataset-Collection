@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_005_GEMINI",
+  "bug_id": "HR_ARRAY_PAIRS_005_GEMINI_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Divide and Conquer",
+    "created_date_timestamp": 1763343600
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "def solve()",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def solve():\n    import sys\n    input = sys.stdin.readline\n\n    n = int(input())\n    a = list(map(int, input().split()))\n\n    count = 0\n\n    for i in range(n):\n        for j in range(i + 1, n):\n            if a[i] * a[j] <= max(a[i], a[j]):\n                count += 1\n\n    print(count)",
+  "oracle_context": {
+    "apis": ["sys.stdin.readline"],
+    "classes": [],
+    "vars": ["a", "count"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_005_GEMINI_T01",
+      "input": "5\n1 1 2 4 2",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect condition",
+    "bug_description": "The solution incorrectly uses max(a[i], a[j]) in the condition, which does not fully capture the required constraint based on the maximum element between indices i and j.",
+    "root_cause": "Misinterpretation of the problem condition involving the maximum element in the subarray between i and j.",
+    "severity": "High",
+    "bug_location": "Condition inside nested loop"
+  }
+}

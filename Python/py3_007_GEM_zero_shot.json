@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_004_GEMINI",
+  "bug_id": "HR_ARRAY_QUERIES_004_GEMINI_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency Differential",
+    "created_date_timestamp": 1763318800
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "def solve(self)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Array and Queries using frequency differences.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def solve(self):\n        import sys\n        input = sys.stdin.readline\n        mod = 10**9 + 7\n\n        n = int(input())\n        a = list(map(int, input().split()))\n        q = int(input())\n\n        from collections import defaultdict\n        counts = defaultdict(int)\n\n        for v in a:\n            counts[v] += 1\n\n        current_f = 0\n        for v in counts:\n            if counts[v] > counts[v-1]:\n                current_f += counts[v] - counts[v-1]\n\n        total_ans = 0\n\n        for i in range(1, q + 1):\n            idx, new_val = map(int, input().split())\n            idx -= 1\n            old_val = a[idx]\n\n            affected = {old_val, old_val + 1, new_val, new_val + 1}\n\n            for v in affected:\n                if counts[v] > counts[v-1]:\n                    current_f -= (counts[v] - counts[v-1])\n\n            counts[old_val] -= 1\n            counts[new_val] += 1\n            a[idx] = new_val\n\n            for v in affected:\n                if counts[v] > counts[v-1]:\n                    current_f += (counts[v] - counts[v-1])\n\n            total_ans = (total_ans + (i * current_f)) % mod\n\n        print(total_ans)",
+  "oracle_context": {
+    "apis": ["collections.defaultdict", "sys.stdin.readline"],
+    "classes": ["Solution"],
+    "vars": ["counts", "current_f", "total_ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_004_GEMINI_T01",
+      "input": "5\n2 2 1 1 1\n2\n3 2\n5 5",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect frequency transition handling",
+    "bug_description": "The differential update logic does not correctly maintain the invariant for all edge cases, leading to incorrect current_f updates.",
+    "root_cause": "Improper handling of boundary conditions when counts[v] equals counts[v-1] during updates.",
+    "severity": "High",
+    "bug_location": "Update logic around affected values set"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ALMOST_EQUAL_005_GEMINI",
+  "bug_id": "HR_ALMOST_EQUAL_005_GEMINI_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Range Queries / Mo's Algorithm",
+    "created_date_timestamp": 1763372400
+  },
+  "original_docstring": "Almost Equal - Advanced",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/almost-equal-advanced/problem",
+  "function_signature": "def solve()",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Python solution using Mo's Algorithm for the HackerRank problem Almost Equal - Advanced.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def solve():\n    import sys\n    input = sys.stdin.readline\n\n    n, K = map(int, input().split())\n    H = list(map(int, input().split()))\n    Q = int(input())\n\n    queries = []\n    for i in range(Q):\n        l, r = map(int, input().split())\n        queries.append((l, r, i))\n\n    block = int(n ** 0.5)\n    queries.sort(key=lambda x: (x[0] // block, x[1]))\n\n    from bisect import bisect_left, bisect_right, insort\n\n    window = []\n    cur_l, cur_r = 0, -1\n    current_ans = 0\n    res = [0] * Q\n\n    def add(x):\n        nonlocal current_ans\n        left = bisect_left(window, x - K)\n        right = bisect_right(window, x + K)\n        current_ans += (right - left)\n        insort(window, x)\n\n    def remove(x):\n        nonlocal current_ans\n        left = bisect_left(window, x - K)\n        right = bisect_right(window, x + K)\n        current_ans -= (right - left - 1)\n        window.pop(bisect_left(window, x))\n\n    for l, r, idx in queries:\n        while cur_r < r:\n            cur_r += 1\n            add(H[cur_r])\n        while cur_l > l:\n            cur_l -= 1\n            add(H[cur_l])\n        while cur_r > r:\n            remove(H[cur_r])\n            cur_r -= 1\n        while cur_l < l:\n            remove(H[cur_l])\n            cur_l += 1\n\n        res[idx] = current_ans\n\n    print(\"\\n\".join(map(str, res)))",
+  "oracle_context": {
+    "apis": ["bisect_left", "bisect_right", "insort"],
+    "classes": [],
+    "vars": ["window", "current_ans", "res"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ALMOST_EQUAL_005_GEMINI_T01",
+      "input": "5 2\n1 3 4 3 0\n3\n0 1\n1 3\n0 4",
+      "expected": "1\n3\n6"
+    }
+  ],
+  "expected_output": "1\n3\n6",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Inefficient insertion in sorted list",
+    "bug_description": "Using Python list with bisect and insertion leads to O(n) per operation, making Mo’s algorithm too slow.",
+    "root_cause": "Inefficient data structure (list) instead of balanced tree or Fenwick Tree.",
+    "severity": "High",
+    "bug_location": "insort and pop operations on window list"
+  }
+}

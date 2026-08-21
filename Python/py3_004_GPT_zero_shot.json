@@ -1,0 +1,52 @@
+{
+"code_id": "PY3_005_GPT",
+"bug_id": "PY3_005_GPT_B01",
+"language": "Python 3",
+"metadata": {
+"task_category": "Number Theory - Base Representation",
+"created_date_timestamp": 1763262145
+},
+"original_docstring": "Minimum Base Representation",
+"original_code": null,
+"source_name": "geeksforgeeks - [https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1](https://www.geeksforgeeks.org/problems/minimum-base-representation--143027/1)",
+"function_signature": "def minBase(self, M)",
+"llm_name": "ChatGPT",
+"prompt_text": "Write a Python solution for the GeeksforGeeks problem Minimum Base Representation.",
+"prompt_type": "zero_shot",
+"dependency_level": "self-contained",
+"dependency_subtype": null,
+"generated_code": "class Solution:\n    def minBase(self, M):\n        import math\n        if M == 1:\n            return 2\n\n        left, right = 2, M\n\n        for k in range(2, 50):\n            left, right = 2, M\n            while left <= right:\n                mid = (left + right) // 2\n                total = 1\n                term = 1\n\n                for _ in range(1, k):\n                    term *= mid\n                    if term > M:\n                        total = M + 1\n                        break\n                    total += term\n                    if total > M:\n                        break\n\n                if total == M:\n                    return mid\n                elif total < M:\n                    left = mid + 1\n                else:\n                    right = mid - 1\n\n        return M - 1",
+"oracle_context": {
+"apis": ["math"],
+"classes": ["Solution"],
+"vars": ["M", "k", "mid"]
+},
+"test_cases": [
+{
+"id": "PY3_005_GPT_T01",
+"input": "M = 21",
+"expected": "4"
+},
+{
+"id": "PY3_005_GPT_T02",
+"input": "M = 63",
+"expected": "2"
+},
+{
+"id": "PY3_005_GPT_T03",
+"input": "M = 42",
+"expected": "4"
+}
+],
+"expected_output": "4, 2, 4",
+"actual_output": "Wrong Answer",
+"bug_analysis": {
+"bug_symptom": "WRONG_ANSWER",
+"bug_type": "Logic error",
+"bug_subtype": "Incorrect fallback base",
+"bug_description": "The solution incorrectly returns M-1 as fallback, missing valid smaller bases like 4 for M=42.",
+"root_cause": "Binary search approach does not cover all divisor-based cases and fallback logic is incorrect.",
+"severity": "High",
+"bug_location": "Final return statement and missing divisor-based handling"
+}
+}

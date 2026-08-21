@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_004_GEMINI",
+  "bug_id": "HR_TICKET_TO_RIDE_004_GEMINI_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / DP on Tree",
+    "created_date_timestamp": 1763403600
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "def solve()",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "def solve():\n    import sys\n    sys.setrecursionlimit(10**7)\n    input = sys.stdin.readline\n\n    n = int(input())\n    adj = [[] for _ in range(n)]\n\n    for _ in range(n - 1):\n        u, v, w = map(int, input().split())\n        u -= 1\n        v -= 1\n        adj[u].append((v, w))\n        adj[v].append((u, w))\n\n    node_val = [0] * n\n\n    m = int(input())\n    for _ in range(m):\n        u, v, cost = map(int, input().split())\n        u -= 1\n        v -= 1\n        node_val[u] += cost\n        node_val[v] += cost\n\n    max_profit = 0\n\n    def dfs(u, parent):\n        nonlocal max_profit\n\n        best1 = 0\n        best2 = 0\n\n        for v, w in adj[u]:\n            if v == parent:\n                continue\n\n            val = dfs(v, u) - w\n\n            if val > best1:\n                best2 = best1\n                best1 = val\n            elif val > best2:\n                best2 = val\n\n        current = node_val[u] + best1 + best2\n        max_profit = max(max_profit, current)\n\n        return node_val[u] + best1\n\n    dfs(0, -1)\n\n    print(max_profit)\n\nif __name__ == \"__main__\":\n    solve()",
+  "oracle_context": {
+    "apis": ["sys.stdin.readline"],
+    "classes": [],
+    "vars": ["adj", "node_val", "max_profit"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_004_GEMINI_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect path contribution modeling",
+    "bug_description": "The solution assumes ticket costs can be aggregated at endpoints and combined via tree DP, but actual contribution depends on full path between nodes.",
+    "root_cause": "Failure to distribute ticket costs along the path using LCA or difference-on-tree techniques.",
+    "severity": "High",
+    "bug_location": "Ticket accumulation and DFS logic"
+  }
+}

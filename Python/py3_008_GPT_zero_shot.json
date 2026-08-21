@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_004_CHATGPT",
+  "bug_id": "HR_ARRAY_PAIRS_004_CHATGPT_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Monotonic Stack / Range",
+    "created_date_timestamp": 1763340200
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "def count_pairs(self, a)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write an optimized Python solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class Solution:\n    def count_pairs(self, a):\n        n = len(a)\n        left = [-1] * n\n        right = [n] * n\n        stack = []\n\n        # Previous greater element\n        for i in range(n):\n            while stack and a[stack[-1]] < a[i]:\n                stack.pop()\n            left[i] = stack[-1] if stack else -1\n            stack.append(i)\n\n        stack.clear()\n\n        # Next greater element\n        for i in range(n - 1, -1, -1):\n            while stack and a[stack[-1]] < a[i]:\n                stack.pop()\n            right[i] = stack[-1] if stack else n\n            stack.append(i)\n\n        ans = 0\n\n        # Process each index as maximum\n        for i in range(n):\n            l = left[i] + 1\n            r = right[i] - 1\n\n            for x in range(l, i + 1):\n                for y in range(i + 1, r + 1):\n                    if a[x] * a[y] <= a[i]:\n                        ans += 1\n\n        return ans",
+  "oracle_context": {
+    "apis": [],
+    "classes": ["Solution"],
+    "vars": ["left", "right", "stack", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_004_CHATGPT_T01",
+      "input": "a = [1, 1, 2, 4, 2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Overcounting pairs",
+    "bug_description": "The solution incorrectly counts pairs multiple times across overlapping ranges defined by next/previous greater elements.",
+    "root_cause": "Incorrect use of range boundaries without ensuring unique pair counting per valid maximum.",
+    "severity": "High",
+    "bug_location": "Nested loops inside range processing"
+  }
+}

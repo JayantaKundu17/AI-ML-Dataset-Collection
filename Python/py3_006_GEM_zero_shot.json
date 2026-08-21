@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TRIPLETS_002_GEMINI",
+  "bug_id": "HR_TRIPLETS_002_GEMINI_B01",
+  "language": "Python 3",
+  "metadata": {
+    "task_category": "Data Structures - Fenwick Tree",
+    "created_date_timestamp": 1763301200
+  },
+  "original_docstring": "Triplets",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/triplets/problem",
+  "function_signature": "def solve(self, d)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized Python solution using Fenwick Tree for the HackerRank Triplets problem.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "class FenwickTree:\n    def __init__(self, n):\n        self.n = n\n        self.bit = [0] * (n + 1)\n\n    def update(self, i, val):\n        while i <= self.n:\n            self.bit[i] += val\n            i += i & -i\n\n    def query(self, i):\n        s = 0\n        while i > 0:\n            s += self.bit[i]\n            i -= i & -i\n        return s\n\nclass Solution:\n    def solve(self, d):\n        n = len(d)\n        sorted_unique = sorted(set(d))\n        rank_map = {v: i+1 for i, v in enumerate(sorted_unique)}\n        max_rank = len(sorted_unique)\n\n        left_bit = FenwickTree(max_rank)\n        smaller_left = [0] * n\n\n        for i in range(n):\n            rank = rank_map[d[i]]\n            smaller_left[i] = left_bit.query(rank - 1)\n            left_bit.update(rank, 1)\n\n        right_bit = FenwickTree(max_rank)\n        larger_right = [0] * n\n\n        for i in range(n-1, -1, -1):\n            rank = rank_map[d[i]]\n            larger_right[i] = right_bit.query(max_rank) - right_bit.query(rank)\n            right_bit.update(rank, 1)\n\n        ans = 0\n        for i in range(n):\n            ans += smaller_left[i] * larger_right[i]\n\n        return ans",
+  "oracle_context": {
+    "apis": [],
+    "classes": ["FenwickTree", "Solution"],
+    "vars": ["rank_map", "smaller_left", "larger_right", "ans"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TRIPLETS_002_GEMINI_T01",
+      "input": "d = [1, 1, 2, 2, 3, 4]",
+      "expected": "4"
+    }
+  ],
+  "expected_output": "4",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Duplicate counting issue",
+    "bug_description": "The Fenwick Tree approach counts index-based increasing triplets instead of distinct value-based triplets, violating problem constraints.",
+    "root_cause": "Does not properly handle duplicates (each value can appear at most twice), leading to overcounting of identical triplets.",
+    "severity": "High",
+    "bug_location": "Final aggregation: ans += smaller_left[i] * larger_right[i]"
+  }
+}
