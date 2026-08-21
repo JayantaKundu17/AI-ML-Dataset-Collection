@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_003_DPSK",
+  "bug_id": "HR_TICKET_TO_RIDE_003_DPSK_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / All-Pairs Computation",
+    "created_date_timestamp": 1763397200
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "int main()",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a C solution for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 2005\n\ntypedef long long ll;\n\nint n;\nint pathEdges[MAXN][MAXN];\nll pathTickets[MAXN][MAXN];\n\nint main() {\n    scanf(\"%d\", &n);\n\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < n; j++)\n            pathEdges[i][j] = (i == j ? 0 : 1e9);\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v, w;\n        scanf(\"%d %d %d\", &u, &v, &w);\n        u--; v--;\n        pathEdges[u][v] = pathEdges[v][u] = w;\n    }\n\n    // Floyd-Warshall for all-pairs shortest path\n    for (int k = 0; k < n; k++)\n        for (int i = 0; i < n; i++)\n            for (int j = 0; j < n; j++)\n                if (pathEdges[i][j] > pathEdges[i][k] + pathEdges[k][j])\n                    pathEdges[i][j] = pathEdges[i][k] + pathEdges[k][j];\n\n    int m;\n    scanf(\"%d\", &m);\n\n    int A[100005], B[100005];\n    ll C[100005];\n\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d %lld\", &A[i], &B[i], &C[i]);\n        A[i]--; B[i]--;\n    }\n\n    for (int u = 0; u < n; u++) {\n        for (int v = 0; v < n; v++) {\n            ll sum = 0;\n            for (int t = 0; t < m; t++) {\n                int a = A[t], b = B[t];\n                if (pathEdges[u][a] + pathEdges[a][v] == pathEdges[u][v] &&\n                    pathEdges[u][b] + pathEdges[b][v] == pathEdges[u][v]) {\n                    sum += C[t];\n                }\n            }\n            pathTickets[u][v] = sum;\n        }\n    }\n\n    ll maxProfit = 0;\n\n    for (int u = 0; u < n; u++) {\n        for (int v = u; v < n; v++) {\n            ll profit = pathTickets[u][v] - pathEdges[u][v];\n            if (profit > maxProfit) maxProfit = profit;\n        }\n    }\n\n    printf(\"%lld\\n\", maxProfit);\n\n    return 0;\n}",
+  "oracle_context": {
+    "apis": ["scanf", "printf"],
+    "classes": [],
+    "vars": ["pathEdges", "pathTickets", "maxProfit"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_003_DPSK_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Cubic + quadratic loops",
+    "bug_description": "The solution uses Floyd-Warshall O(n^3) and additional O(n^2 * m) loops, making it infeasible for constraints up to 100000.",
+    "root_cause": "Brute-force all-pairs computation instead of leveraging tree structure and LCA optimizations.",
+    "severity": "Critical",
+    "bug_location": "Floyd-Warshall and nested loops over u, v, and tickets"
+  }
+}

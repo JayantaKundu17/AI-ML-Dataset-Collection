@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_003_DPSK",
+  "bug_id": "HR_ARRAY_PAIRS_003_DPSK_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Data Structures - Divide and Conquer",
+    "created_date_timestamp": 1763337200
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "int main()",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a C solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "#include <stdio.h>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int A[n];\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    long long count = 0;\n\n    for (int i = 0; i < n; i++) {\n        int maxVal = A[i];\n        for (int j = i + 1; j < n; j++) {\n            if (A[j] > maxVal) maxVal = A[j];\n            if ((long long)A[i] * A[j] <= maxVal) {\n                count++;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", count);\n    return 0;\n}",
+  "oracle_context": {
+    "apis": ["scanf", "printf"],
+    "classes": [],
+    "vars": ["A", "count", "maxVal"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_003_DPSK_T01",
+      "input": "n=5, A=[1,1,2,4,2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Time Limit Exceeded",
+  "bug_analysis": {
+    "bug_symptom": "TIME_LIMIT_EXCEEDED",
+    "bug_type": "Performance issue",
+    "bug_subtype": "Brute force O(n^2)",
+    "bug_description": "The solution uses a nested loop leading to O(n^2) time complexity, which is too slow for large constraints (n up to 100000).",
+    "root_cause": "Inefficient brute-force approach instead of using optimized divide-and-conquer or segment tree method.",
+    "severity": "High",
+    "bug_location": "Double nested loop over array elements"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TRIPLETS_GEMINI",
+  "bug_id": "HR_TRIPLETS_GEMINI_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Data Structures - Counting Triplets",
+    "created_date_timestamp": 1763297800
+  },
+  "original_docstring": "Triplets",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/triplets/problem",
+  "function_signature": "long solve(int d_count, long* d)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an efficient C solution for the HackerRank problem Triplets.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "long solve(int n, long* arr) {\n    int *smaller_left = malloc(n * sizeof(int));\n    int *larger_right = malloc(n * sizeof(int));\n\n    for (int i = 0; i < n; i++) {\n        smaller_left[i] = 0;\n        for (int j = 0; j < i; j++) {\n            if (arr[j] < arr[i]) smaller_left[i]++;\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        larger_right[i] = 0;\n        for (int j = i + 1; j < n; j++) {\n            if (arr[j] > arr[i]) larger_right[i]++;\n        }\n    }\n\n    long result = 0;\n    for (int i = 0; i < n; i++) {\n        result += (long)smaller_left[i] * larger_right[i];\n    }\n\n    free(smaller_left);\n    free(larger_right);\n    return result;\n}",
+  "oracle_context": {
+    "apis": ["malloc", "free"],
+    "classes": [],
+    "vars": ["smaller_left", "larger_right", "result"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TRIPLETS_GEMINI_T01",
+      "input": "n = 6, arr = [1, 1, 2, 2, 3, 4]",
+      "expected": "4"
+    }
+  ],
+  "expected_output": "4",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Duplicate handling issue",
+    "bug_description": "The solution counts index-based increasing triplets instead of distinct value-based triplets, leading to overcounting when duplicate values exist.",
+    "root_cause": "Does not enforce uniqueness of values in triplets and treats duplicate indices as separate combinations.",
+    "severity": "High",
+    "bug_location": "Final aggregation: result += smaller_left[i] * larger_right[i]"
+  }
+}

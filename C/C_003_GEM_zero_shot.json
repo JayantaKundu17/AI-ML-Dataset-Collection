@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_PAIRS_002_GEMINI",
+  "bug_id": "HR_ARRAY_PAIRS_002_GEMINI_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Data Structures - Divide and Conquer",
+    "created_date_timestamp": 1763333800
+  },
+  "original_docstring": "Array Pairs",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-pairs/problem",
+  "function_signature": "long long solve(int n)",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized C solution for the HackerRank problem Array Pairs.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "long long solve(int n) {\n    long long count = 0;\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            if ((long long)a[i] * a[j] <= a[j]) {\n                count++;\n            }\n        }\n    }\n    return count;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["a", "count"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_PAIRS_002_GEMINI_T01",
+      "input": "n=5, a=[1,1,2,4,2]",
+      "expected": "8"
+    }
+  ],
+  "expected_output": "8",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect condition",
+    "bug_description": "The condition incorrectly compares product with a[j] instead of the correct constraint involving maximum or problem-defined relation.",
+    "root_cause": "Misinterpretation of pair condition from the problem statement.",
+    "severity": "High",
+    "bug_location": "Condition inside nested loops"
+  }
+}

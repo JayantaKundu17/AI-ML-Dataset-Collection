@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_003_DPSK",
+  "bug_id": "HR_ARRAY_QUERIES_003_DPSK_B00",
+  "language": "C",
+  "metadata": {
+    "task_category": "Array Manipulation - Beautiful Subsequences",
+    "created_date_timestamp": 1763314200
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "int arrayAndQueries(int n, int* A, int q, int k, int** queries)",
+  "llm_name": "DeepSeek",
+  "prompt_text": "Write a C solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "int arrayAndQueries(int n, int* A, int q, int k, int** queries) {\n    long long result = 0;\n\n    for (int qi = 0; qi < q; qi++) {\n        int idx = queries[qi][0] - 1;\n        int val = queries[qi][1];\n        A[idx] = val;\n\n        int freq[100001] = {0};\n        for (int i = 0; i < n; i++) {\n            freq[A[i]]++;\n        }\n\n        int maxFreq = 0;\n        for (int i = 0; i < 100001; i++) {\n            if (freq[i] > maxFreq) {\n                maxFreq = freq[i];\n            }\n        }\n\n        result += maxFreq;\n    }\n\n    return result;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["freq", "maxFreq", "result"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_003_DPSK_T01",
+      "input": "n=5, A=[2,2,1,1,1], q=2, queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "11",
+  "bug_analysis": {
+    "bug_symptom": "NO_BUG",
+    "bug_type": null,
+    "bug_subtype": null,
+    "bug_description": "The solution produces correct output for the given test case and follows expected behavior.",
+    "root_cause": null,
+    "severity": null,
+    "bug_location": null
+  }
+}

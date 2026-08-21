@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ALMOST_EQUAL_008_GEMINI",
+  "bug_id": "HR_ALMOST_EQUAL_008_GEMINI_B00",
+  "language": "C",
+  "metadata": {
+    "task_category": "Data Structures - Range Queries / Mo's Algorithm + BIT",
+    "created_date_timestamp": 1763383800
+  },
+  "original_docstring": "Almost Equal - Advanced",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/almost-equal-advanced/problem",
+  "function_signature": "int main()",
+  "llm_name": "Gemini",
+  "prompt_text": "Write an optimized C solution using Mo's algorithm and Fenwick Tree for the HackerRank problem Almost Equal - Advanced.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\n#define MAXN 100005\n\ntypedef long long ll;\n\nint n, K, Q;\nint H[MAXN];\nll result[MAXN];\n\n// Fenwick Tree\nll bit[MAXN];\nint size;\n\nvoid update(int i, int v) {\n    for (++i; i <= size; i += i & -i)\n        bit[i] += v;\n}\n\nll query(int i) {\n    ll s = 0;\n    for (++i; i > 0; i -= i & -i)\n        s += bit[i];\n    return s;\n}\n\nll range_query(int l, int r) {\n    if (l > r) return 0;\n    return query(r) - query(l - 1);\n}\n\nint cmp(const void *a, const void *b) {\n    int *x = (int *)a;\n    int *y = (int *)b;\n    return (*x) - (*y);\n}\n\n// Query structure\nstruct Query {\n    int l, r, id, block;\n};\n\nint block_size;\n\nint compare_queries(const void *a, const void *b) {\n    struct Query *q1 = (struct Query *)a;\n    struct Query *q2 = (struct Query *)b;\n    if (q1->block != q2->block)\n        return q1->block - q2->block;\n    return q1->r - q2->r;\n}\n\nstruct Query queries[MAXN];\n\nint sorted[MAXN];\nint comp[MAXN];\n\nint lower_bound(int x) {\n    int l = 0, r = size;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (sorted[m] >= x) r = m;\n        else l = m + 1;\n    }\n    return l;\n}\n\nint upper_bound(int x) {\n    int l = 0, r = size;\n    while (l < r) {\n        int m = (l + r) / 2;\n        if (sorted[m] > x) r = m;\n        else l = m + 1;\n    }\n    return l - 1;\n}\n\nll current_ans = 0;\n\nvoid add(int pos) {\n    int val = H[pos];\n    int lo = lower_bound(val - K);\n    int hi = upper_bound(val + K);\n    current_ans += range_query(lo, hi);\n    update(comp[pos], 1);\n}\n\nvoid remove_val(int pos) {\n    int val = H[pos];\n    update(comp[pos], -1);\n    int lo = lower_bound(val - K);\n    int hi = upper_bound(val + K);\n    current_ans -= range_query(lo, hi);\n}\n\nint main() {\n    scanf(\"%d %d\", &n, &K);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &H[i]);\n        sorted[i] = H[i];\n    }\n\n    qsort(sorted, n, sizeof(int), cmp);\n\n    size = 0;\n    for (int i = 0; i < n; i++) {\n        if (i == 0 || sorted[i] != sorted[i - 1])\n            sorted[size++] = sorted[i];\n    }\n\n    for (int i = 0; i < n; i++) {\n        comp[i] = lower_bound(H[i]);\n    }\n\n    scanf(\"%d\", &Q);\n    for (int i = 0; i < Q; i++) {\n        scanf(\"%d %d\", &queries[i].l, &queries[i].r);\n        queries[i].id = i;\n    }\n\n    block_size = (int)sqrt(n);\n    for (int i = 0; i < Q; i++) {\n        queries[i].block = queries[i].l / block_size;\n    }\n\n    qsort(queries, Q, sizeof(struct Query), compare_queries);\n\n    int cur_l = 0, cur_r = -1;\n\n    for (int i = 0; i < Q; i++) {\n        while (cur_r < queries[i].r) add(++cur_r);\n        while (cur_l > queries[i].l) add(--cur_l);\n        while (cur_r > queries[i].r) remove_val(cur_r--);\n        while (cur_l < queries[i].l) remove_val(cur_l++);\n        result[queries[i].id] = current_ans;\n    }\n\n    for (int i = 0; i < Q; i++) {\n        printf(\"%lld\\n\", result[i]);\n    }\n\n    return 0;\n}",
+  "oracle_context": {
+    "apis": ["qsort", "sqrt", "scanf", "printf"],
+    "classes": [],
+    "vars": ["bit", "comp", "current_ans", "queries", "result"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ALMOST_EQUAL_008_GEMINI_T01",
+      "input": "5 2\n1 3 4 3 0\n3\n0 1\n1 3\n0 4",
+      "expected": "1\n3\n6"
+    }
+  ],
+  "expected_output": "1\n3\n6",
+  "actual_output": "1\n3\n6",
+  "bug_analysis": {
+    "bug_symptom": "NO_BUG",
+    "bug_type": null,
+    "bug_subtype": null,
+    "bug_description": "The solution correctly uses Mo's algorithm with Fenwick Tree and produces correct results within constraints.",
+    "root_cause": null,
+    "severity": null,
+    "bug_location": null
+  }
+}

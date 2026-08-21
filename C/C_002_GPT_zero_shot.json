@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_ARRAY_QUERIES_001_CHATGPT",
+  "bug_id": "HR_ARRAY_QUERIES_001_CHATGPT_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Array Manipulation - Frequency / Greedy",
+    "created_date_timestamp": 1763307800
+  },
+  "original_docstring": "Array and Queries",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/array-and-queries-1/problem",
+  "function_signature": "int arrayAndQueries(int n, int* A, int q, int k, int** queries)",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write a C solution for the HackerRank problem Array and Queries.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "int arrayAndQueries(int n, int* A, int q, int k, int** queries) {\n    int result = 0;\n\n    for (int qi = 0; qi < q; qi++) {\n        int idx = queries[qi][0] - 1;\n        int val = queries[qi][1];\n        A[idx] = val;\n\n        int count[1001] = {0};\n        for (int i = 0; i < n; i++) {\n            count[A[i]]++;\n        }\n\n        int maxFreq = 0;\n        for (int i = 0; i <= 1000; i++) {\n            if (count[i] > maxFreq) {\n                maxFreq = count[i];\n            }\n        }\n\n        result += maxFreq;\n    }\n\n    return result;\n}",
+  "oracle_context": {
+    "apis": [],
+    "classes": [],
+    "vars": ["result", "count", "maxFreq"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_ARRAY_QUERIES_001_CHATGPT_T01",
+      "input": "n=5, A=[2,2,1,1,1], q=2, queries=[[3,2],[5,5]]",
+      "expected": "11"
+    }
+  ],
+  "expected_output": "11",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect problem interpretation",
+    "bug_description": "The solution incorrectly computes maximum frequency instead of calculating the minimum number of beautiful subsequences required after each query.",
+    "root_cause": "Misunderstanding of the problem, where the answer depends on grouping logic and not simple frequency counting.",
+    "severity": "High",
+    "bug_location": "Entire logic after updating array (frequency-based computation)"
+  }
+}

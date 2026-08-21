@@ -1,0 +1,42 @@
+{
+  "code_id": "HR_TICKET_TO_RIDE_001_CHATGPT",
+  "bug_id": "HR_TICKET_TO_RIDE_001_CHATGPT_B01",
+  "language": "C",
+  "metadata": {
+    "task_category": "Graph Theory - Tree / DFS Aggregation",
+    "created_date_timestamp": 1763390200
+  },
+  "original_docstring": "Ticket to Ride",
+  "original_code": null,
+  "source_name": "hackerrank - https://www.hackerrank.com/challenges/ticket-to-ride/problem",
+  "function_signature": "int main()",
+  "llm_name": "ChatGPT",
+  "prompt_text": "Write a C solution for the HackerRank problem Ticket to Ride.",
+  "prompt_type": "zero_shot",
+  "dependency_level": "self-contained",
+  "dependency_subtype": null,
+  "generated_code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef long long ll;\n\n#define MAXN 100005\n\nll val[MAXN];\nll ans = 0;\n\nstruct Edge {\n    int to;\n    int w;\n    struct Edge* next;\n};\n\nstruct Edge* adj[MAXN];\n\nvoid add_edge(int u, int v, int w) {\n    struct Edge* e = malloc(sizeof(struct Edge));\n    e->to = v;\n    e->w = w;\n    e->next = adj[u];\n    adj[u] = e;\n}\n\nll dfs(int u, int parent) {\n    ll sum = val[u];\n\n    for (struct Edge* e = adj[u]; e != NULL; e = e->next) {\n        int v = e->to;\n        if (v == parent) continue;\n\n        ll sub = dfs(v, u);\n        ans = ans > (sub - e->w) ? ans : (sub - e->w);\n        sum += sub;\n    }\n\n    return sum;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n\n    for (int i = 1; i <= n; i++) adj[i] = NULL, val[i] = 0;\n\n    for (int i = 0; i < n - 1; i++) {\n        int u, v, w;\n        scanf(\"%d %d %d\", &u, &v, &w);\n        add_edge(u, v, w);\n        add_edge(v, u, w);\n    }\n\n    int m;\n    scanf(\"%d\", &m);\n\n    for (int i = 0; i < m; i++) {\n        int a, b;\n        ll cost;\n        scanf(\"%d %d %lld\", &a, &b, &cost);\n        val[a] += cost;\n        val[b] += cost;\n    }\n\n    dfs(1, -1);\n\n    printf(\"%lld\\n\", ans);\n\n    return 0;\n}",
+  "oracle_context": {
+    "apis": ["scanf", "printf", "malloc"],
+    "classes": ["Edge"],
+    "vars": ["val", "ans", "adj"]
+  },
+  "test_cases": [
+    {
+      "id": "HR_TICKET_TO_RIDE_001_CHATGPT_T01",
+      "input": "7\n1 2 1\n1 3 1\n1 4 4\n4 5 1\n4 6 1\n4 7 1\n5\n5 7 3\n3 6 2\n3 4 10\n2 7 15\n1 6 7",
+      "expected": "13"
+    }
+  ],
+  "expected_output": "13",
+  "actual_output": "Wrong Answer",
+  "bug_analysis": {
+    "bug_symptom": "WRONG_ANSWER",
+    "bug_type": "Logic error",
+    "bug_subtype": "Incorrect aggregation of ticket contributions",
+    "bug_description": "The solution incorrectly assumes ticket contributions can be added independently to endpoints and aggregated via subtree sums, which does not correctly represent paths between arbitrary city pairs.",
+    "root_cause": "Misinterpretation of how ticket paths contribute to profit across arbitrary pairs of nodes.",
+    "severity": "High",
+    "bug_location": "DFS aggregation logic and ticket contribution modeling"
+  }
+}
